@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: biogas-backend
+    env: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        value: biogas-super-secret-key-2024
