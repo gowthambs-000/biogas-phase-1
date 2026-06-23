@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import API_URL from '../config';
 import './Analytics.css';
 
 const Analytics = () => {
@@ -21,7 +22,7 @@ const Analytics = () => {
       try {
         const token = localStorage.getItem('auth_token');
         
-        const response = await fetch('http://localhost:5000/api/predictions', {
+        const response = await fetch(`${API_URL}/api/predictions`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -123,9 +124,7 @@ const Analytics = () => {
         </div>
       </div>
 
-      {/* Charts Grid */}
       <div className="charts-grid">
-        {/* Yield Trend */}
         <div className="chart-card">
           <h3 className="card-title">Your Biogas Yield Trend</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -142,7 +141,6 @@ const Analytics = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* Methane Content */}
         <div className="chart-card">
           <h3 className="card-title">Your Methane Content Trend</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -159,7 +157,6 @@ const Analytics = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* Feedstock Comparison */}
         <div className="chart-card full-width">
           <h3 className="card-title">Your Yield by Feedstock Type</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -177,7 +174,6 @@ const Analytics = () => {
         </div>
       </div>
 
-      {/* Stats Summary */}
       <div className="analytics-stats">
         <div className="stat-box">
           <span className="stat-label">Best Yield</span>

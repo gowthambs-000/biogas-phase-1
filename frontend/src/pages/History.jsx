@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../config';
 import './History.css';
 
 const History = () => {
@@ -10,13 +11,12 @@ const History = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Load predictions from localStorage on mount
   useEffect(() => {
     const loadPredictions = async () => {
       try {
         const token = localStorage.getItem('auth_token');
         
-        const response = await fetch('http://localhost:5000/api/predictions', {
+        const response = await fetch(`${API_URL}/api/predictions`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -25,9 +25,8 @@ const History = () => {
         if (response.ok) {
           const data = await response.json();
           
-          // Format for display
           const formatted = data.map(p => ({
-            id: p._id,
+            id: p._id || p.id,
             date: new Date(p.createdAt).toISOString().split('T')[0],
             feedstock: p.inputs.feedstock,
             temp: p.inputs.temperature,
@@ -91,13 +90,21 @@ const History = () => {
     );
   };
 
-  const handleDelete = (id) => {
-    const stored = localStorage.getItem('prediction_history');
-    if (stored) {
-      const allPredictions = JSON.parse(stored);
-      const updated = allPredictions.filter(p => p.id !== id);
-      localStorage.setItem('prediction_history', JSON.stringify(updated));
-      setPredictions(prev => prev.filter(p => p.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      const token = localStorage.getItem('auth_token');
+      const response = await fetch(`${API_URL}/api/predictions/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        setPredictions(prev => prev.filter(p => p.id !== id));
+      }
+    } catch (e) {
+      console.error('Delete failed');
     }
   };
 
@@ -128,7 +135,6 @@ const History = () => {
       <h1 className="page-title">Prediction History</h1>
       <p className="page-subtitle">Review and analyze your past biogas predictions</p>
 
-      {/* Controls */}
       <div className="history-controls">
         <div className="search-box">
           <span className="search-icon">🔍</span>
@@ -165,7 +171,6 @@ const History = () => {
         </div>
       </div>
 
-      {/* Stats Summary */}
       <div className="history-stats">
         <div className="history-stat">
           <span className="history-stat-value">{filtered.length}</span>
@@ -185,7 +190,6 @@ const History = () => {
         </div>
       </div>
 
-      {/* Table */}
       <div className="history-table-wrapper">
         {filtered.length > 0 ? (
           <table className="data-table history-table">
@@ -255,7 +259,6 @@ const History = () => {
         )}
       </div>
 
-      {/* Pagination */}
       {filtered.length > 0 && (
         <div className="pagination">
           <button className="page-btn" disabled>← Prev</button>

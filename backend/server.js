@@ -10,8 +10,21 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET || 'biogas-super-secret-key-2024';
 
-// Middleware
-app.use(cors());
+// CORS - Allow Netlify frontend
+const corsOptions = {
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://profound-dango-7fc663.netlify.app',
+    'https://biogas-phase-1.netlify.app',
+    'https://*.netlify.app'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Data file paths
@@ -39,7 +52,7 @@ const writeJson = (filePath, data) => {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 };
 
-// Auto-create admin accounts if they don't exist
+// Auto-create admin accounts
 const initializeAdmins = () => {
   const users = readJson(USERS_FILE);
   const adminEmails = ['admin1@biogas.com', 'admin2@biogas.com', 'admin3@biogas.com', 'admin4@biogas.com'];
@@ -68,11 +81,9 @@ const initializeAdmins = () => {
   }
 };
 
-// Run on startup
 initializeAdmins();
 
-// ==================== AUTH MIDDLEWARE ====================
-
+// Auth Middleware
 const authenticate = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ message: 'No token provided' });
@@ -92,7 +103,6 @@ const authenticate = (req, res, next) => {
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { fullName, email, password } = req.body;
-
     const users = readJson(USERS_FILE);
 
     const existingUser = users.find(u => u.email === email);
@@ -101,7 +111,6 @@ app.post('/api/auth/register', async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const user = {
       id: Date.now().toString(),
       fullName,
@@ -142,7 +151,6 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    // For admin accounts, any password works (demo mode)
     if (!adminEmails.includes(email)) {
       const isValidPassword = await bcrypt.compare(password, user.password);
       if (!isValidPassword) {
@@ -293,12 +301,11 @@ app.get('/api/admin/predictions', authenticate, isAdmin, (req, res) => {
 // ==================== HEALTH CHECK ====================
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Biogas API is running (JSON Storage)' });
+  res.json({ status: 'OK', message: 'Biogas API is running' });
 });
 
 // Start Server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`💾 Data stored in: ${DATA_DIR}`);
-  console.log(`📊 Admin accounts: admin1@biogas.com / admin123`);
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📊 API endpoints ready`);
 });

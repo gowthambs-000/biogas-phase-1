@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../config';
 import './Home.css';
 
 const Home = () => {
@@ -14,9 +15,23 @@ const Home = () => {
   const [recentActivity, setRecentActivity] = useState([]);
   const [hasPredictions, setHasPredictions] = useState(false);
 
-  // Load user data and predictions on mount
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins} min ago`;
+    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    return date.toLocaleDateString();
+  };
+
   useEffect(() => {
-    // Get user name
     const userData = localStorage.getItem('user_data');
     if (userData) {
       try {
@@ -27,12 +42,11 @@ const Home = () => {
       }
     }
 
-    // Fetch predictions from API
     const loadPredictions = async () => {
       try {
         const token = localStorage.getItem('auth_token');
         
-        const response = await fetch('http://localhost:5000/api/predictions', {
+        const response = await fetch(`${API_URL}/api/predictions`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -61,7 +75,7 @@ const Home = () => {
               .slice(-5)
               .reverse()
               .map((p, index) => ({
-                id: p._id || index,
+                id: p._id || p.id || index,
                 action: `Prediction: ${p.inputs.feedstock}`,
                 date: formatDate(p.createdAt),
                 yield: `${p.result.biogasYield.toFixed(2)} m³/kg`,
@@ -83,28 +97,11 @@ const Home = () => {
     loadPredictions();
   }, []);
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now - date;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins} min ago`;
-    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-    if (diffDays === 1) return 'Yesterday';
-    if (diffDays < 7) return `${diffDays} days ago`;
-    return date.toLocaleDateString();
-  };
-
   return (
     <div className="page-container">
       <h1 className="page-title">Welcome back, {userName}! 👋</h1>
       <p className="page-subtitle">Overview of your biogas optimization performance</p>
 
-      {/* KPI Cards */}
       <div className="stats-grid">
         {stats.map((stat, index) => (
           <div key={index} className="stat-card animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
@@ -119,7 +116,6 @@ const Home = () => {
         ))}
       </div>
 
-      {/* Quick Actions */}
       <div className="quick-actions">
         <h3 className="section-title">Quick Actions</h3>
         <div className="action-buttons">
@@ -135,7 +131,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Recent Activity */}
       <div className="recent-activity">
         <h3 className="section-title">Recent Activity</h3>
         {hasPredictions ? (

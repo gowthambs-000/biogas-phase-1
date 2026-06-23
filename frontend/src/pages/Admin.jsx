@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../config';
 import './Admin.css';
 
 const Admin = () => {
@@ -13,7 +14,6 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Check if current user is admin
   const checkAdmin = () => {
     const userData = localStorage.getItem('user_data');
     if (!userData) return false;
@@ -38,13 +38,11 @@ const Admin = () => {
       try {
         const token = localStorage.getItem('auth_token');
         
-        // Fetch users
-        const usersResponse = await fetch('http://localhost:5000/api/admin/users', {
+        const usersResponse = await fetch(`${API_URL}/api/admin/users`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
-        // Fetch predictions
-        const predResponse = await fetch('http://localhost:5000/api/admin/predictions', {
+        const predResponse = await fetch(`${API_URL}/api/admin/predictions`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -106,7 +104,6 @@ const Admin = () => {
       <h1 className="page-title">Admin Dashboard</h1>
       <p className="page-subtitle">Manage users and view system analytics</p>
 
-      {/* Stats Cards */}
       <div className="admin-stats-grid">
         <div className="admin-stat-card">
           <span className="admin-stat-icon">👥</span>
@@ -131,7 +128,6 @@ const Admin = () => {
         </div>
       </div>
 
-      {/* Search */}
       <div className="admin-search">
         <span className="search-icon">🔍</span>
         <input
@@ -143,7 +139,6 @@ const Admin = () => {
         />
       </div>
 
-      {/* Users Table */}
       <div className="admin-table-wrapper">
         <h3 className="section-title">Registered Users</h3>
         {filteredUsers.length > 0 ? (
