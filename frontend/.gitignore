@@ -5,7 +5,7 @@ backend/node_modules/
 # Environment variables
 backend/.env
 
-# Data files (optional - remove if you want to share demo data)
+# Data files
 backend/data/
 
 # Build files
@@ -14,7 +14,6 @@ frontend/build/
 
 # Logs
 *.log
-npm-debug.log*
 
 # OS files
 .DS_Store
