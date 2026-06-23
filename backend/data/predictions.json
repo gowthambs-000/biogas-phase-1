@@ -1,0 +1,25 @@
+[
+  {
+    "id": "1782230049966",
+    "userId": "1782228855504",
+    "userEmail": "darshan95@gmail.com",
+    "inputs": {
+      "temperature": 35,
+      "ph": 8,
+      "hrt": 10,
+      "olr": 3,
+      "feedstock": "Cow Dung",
+      "moisture": 80,
+      "ts": 15,
+      "vsTs": 1,
+      "cn": 20
+    },
+    "result": {
+      "biogasYield": 0.345,
+      "methaneContent": 56,
+      "confidence": 0.92,
+      "optimalRange": true
+    },
+    "createdAt": "2026-06-23T15:54:09.966Z"
+  }
+]

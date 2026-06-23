@@ -1,0 +1,37 @@
+[
+  {
+    "id": "1782228855504",
+    "fullName": "Darshan C",
+    "email": "darshan95@gmail.com",
+    "password": "$2a$10$n0vljWP6IT23OvOGaDb3XO3jSL0.vFh1eEcBPJWcYwXs6k9eEKWUe",
+    "createdAt": "2026-06-23T15:34:15.504Z"
+  },
+  {
+    "id": "admin-1",
+    "fullName": "Admin1",
+    "email": "admin1@biogas.com",
+    "password": "$2a$10$gatXVmZyEXMw8xIfO9jM4eoWGogdS4RgHNQmVt3E1q/DJYrL/7Gue",
+    "createdAt": "2026-06-23T15:43:46.312Z"
+  },
+  {
+    "id": "admin-2",
+    "fullName": "Admin2",
+    "email": "admin2@biogas.com",
+    "password": "$2a$10$ZBR4XdM7X.Ur76LnpULOyuX5NoivrtFoHlxDpY8lXmE.vjHPrleHm",
+    "createdAt": "2026-06-23T15:43:46.408Z"
+  },
+  {
+    "id": "admin-3",
+    "fullName": "Admin3",
+    "email": "admin3@biogas.com",
+    "password": "$2a$10$nppjAUwT66VUEl6xi7RK3OuUcDo/m.iJyigSPRbFzPlIezPPPnsmm",
+    "createdAt": "2026-06-23T15:43:46.511Z"
+  },
+  {
+    "id": "admin-4",
+    "fullName": "Admin4",
+    "email": "admin4@biogas.com",
+    "password": "$2a$10$2vKuzmWPKG/.5p50567XjO89KtRMKtiBvVC097ig8z4x3W6s7gE/q",
+    "createdAt": "2026-06-23T15:43:46.593Z"
+  }
+]
