@@ -7,17 +7,26 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
+
+// ==================== ENVIRONMENT VARIABLES ====================
+// PORT: Uses .env PORT (5000 for local) or process.env.PORT (assigned by Render/cloud)
 const PORT = process.env.PORT || 5000;
+
+// JWT_SECRET: Your strong secret key from .env
 const JWT_SECRET = process.env.JWT_SECRET || 'biogas-super-secret-key-2024';
 
-// CORS - Allow Netlify frontend
+// DATA_DIR: Where JSON files are stored
+// Local: ./data folder | Render Cloud: /tmp folder (required for free tier file writes)
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
+
+// ==================== CORS CONFIGURATION ====================
 const corsOptions = {
   origin: [
-    'http://localhost:5173',
-    'http://localhost:3000',
-    'https://profound-dango-7fc663.netlify.app',
-    'https://biogas-phase-1.netlify.app',
-    'https://*.netlify.app'
+    'http://localhost:5173',                        // Vite dev server
+    'http://localhost:3000',                        // React dev server
+    'https://profound-dango-7fc663.netlify.app',   // Your Netlify frontend
+    'https://biogas-phase-1.netlify.app',           // Alternative Netlify URL
+    'https://*.netlify.app'                         // Any Netlify app
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -27,8 +36,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Data file paths
-const DATA_DIR = path.join(__dirname, 'data');
+// ==================== DATA FILE SETUP ====================
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
 const PREDICTIONS_FILE = path.join(DATA_DIR, 'predictions.json');
 
@@ -52,7 +60,7 @@ const writeJson = (filePath, data) => {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 };
 
-// Auto-create admin accounts
+// ==================== AUTO-CREATE ADMIN ACCOUNTS ====================
 const initializeAdmins = () => {
   const users = readJson(USERS_FILE);
   const adminEmails = ['admin1@biogas.com', 'admin2@biogas.com', 'admin3@biogas.com', 'admin4@biogas.com'];
@@ -83,7 +91,7 @@ const initializeAdmins = () => {
 
 initializeAdmins();
 
-// Auth Middleware
+// ==================== AUTH MIDDLEWARE ====================
 const authenticate = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ message: 'No token provided' });
@@ -298,14 +306,42 @@ app.get('/api/admin/predictions', authenticate, isAdmin, (req, res) => {
   });
 });
 
-// ==================== HEALTH CHECK ====================
+// ==================== HEALTH CHECK & ROOT ROUTE ====================
 
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Biogas API is running' });
+app.get('/', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    message: 'Biogas API is running',
+    version: '1.0.0',
+    environment: process.env.NODE_ENV || 'development',
+    dataDirectory: DATA_DIR,
+    endpoints: [
+      'POST /api/auth/register',
+      'POST /api/auth/login',
+      'GET  /api/auth/me',
+      'POST /api/predictions',
+      'GET  /api/predictions',
+      'DELETE /api/predictions/:id',
+      'GET  /api/admin/users',
+      'GET  /api/admin/predictions',
+      'GET  /api/health'
+    ]
+  });
 });
 
-// Start Server
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    message: 'Biogas API is running',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// ==================== START SERVER ====================
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 API endpoints ready`);
+  console.log(`🔐 JWT Secret loaded: ${JWT_SECRET ? 'Yes' : 'No'}`);
+  console.log(`💾 Data directory: ${DATA_DIR}`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 });
