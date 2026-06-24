@@ -40,5 +40,12 @@
     "email": "darshann95@gmail.com",
     "password": "$2a$10$2R7wJPdl32JyUHLNnoh7fOkhEbTzlIvcXMtXGl1gXiNf11YQvrx2.",
     "createdAt": "2026-06-24T04:52:37.699Z"
+  },
+  {
+    "id": "1782289784841",
+    "fullName": "Gowtham B S",
+    "email": "bsgowtham95@gmail.com",
+    "password": "$2a$10$MROEMcXS0Uq5I83FAKZJz.vIVN785FhszdznvEM4K4QvWxkkxpUyy",
+    "createdAt": "2026-06-24T08:29:44.841Z"
   }
 ]

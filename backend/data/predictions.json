@@ -21,5 +21,28 @@
       "optimalRange": true
     },
     "createdAt": "2026-06-23T15:54:09.966Z"
+  },
+  {
+    "id": "1782289829732",
+    "userId": "1782289784841",
+    "userEmail": "bsgowtham95@gmail.com",
+    "inputs": {
+      "temperature": 30,
+      "ph": 6,
+      "hrt": 5,
+      "olr": 3,
+      "feedstock": "Cow Dung",
+      "moisture": 90,
+      "ts": 5,
+      "vsTs": 0.9,
+      "cn": 20
+    },
+    "result": {
+      "biogasYield": 0.359,
+      "methaneContent": 59,
+      "confidence": 0.81,
+      "optimalRange": false
+    },
+    "createdAt": "2026-06-24T08:30:29.732Z"
   }
 ]
