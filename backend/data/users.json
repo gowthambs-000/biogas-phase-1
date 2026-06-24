@@ -33,5 +33,12 @@
     "email": "admin4@biogas.com",
     "password": "$2a$10$2vKuzmWPKG/.5p50567XjO89KtRMKtiBvVC097ig8z4x3W6s7gE/q",
     "createdAt": "2026-06-23T15:43:46.593Z"
+  },
+  {
+    "id": "1782276757699",
+    "fullName": "Darshan Gowda N",
+    "email": "darshann95@gmail.com",
+    "password": "$2a$10$2R7wJPdl32JyUHLNnoh7fOkhEbTzlIvcXMtXGl1gXiNf11YQvrx2.",
+    "createdAt": "2026-06-24T04:52:37.699Z"
   }
 ]
