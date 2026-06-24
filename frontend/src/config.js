@@ -1,2 +1,2 @@
-const API_URL = 'https://biogas-phase-1.onrender.com';
+const API_URL = 'https://biogas-backend-62lv.onrender.com';
 export default API_URL;
