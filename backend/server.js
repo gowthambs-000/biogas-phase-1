@@ -9,25 +9,14 @@ require('dotenv').config();
 const app = express();
 
 // ==================== ENVIRONMENT VARIABLES ====================
-// PORT: Uses .env PORT (5000 for local) or process.env.PORT (assigned by Render/cloud)
 const PORT = process.env.PORT || 5000;
-
-// JWT_SECRET: Your strong secret key from .env
 const JWT_SECRET = process.env.JWT_SECRET || 'biogas-super-secret-key-2024';
-
-// DATA_DIR: Where JSON files are stored
-// Local: ./data folder | Render Cloud: /tmp folder (required for free tier file writes)
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
 
 // ==================== CORS CONFIGURATION ====================
+// FIXED: Allow all origins for testing
 const corsOptions = {
-  origin: [
-    'http://localhost:5173',                        // Vite dev server
-    'http://localhost:3000',                        // React dev server
-    'https://profound-dango-7fc663.netlify.app',   // Your Netlify frontend
-    'https://biogas-phase-1.netlify.app',           // Alternative Netlify URL
-    'https://*.netlify.app'                         // Any Netlify app
-  ],
+  origin: '*',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -40,12 +29,10 @@ app.use(express.json());
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
 const PREDICTIONS_FILE = path.join(DATA_DIR, 'predictions.json');
 
-// Create data directory if not exists
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
-// Helper: read JSON file
 const readJson = (filePath) => {
   if (!fs.existsSync(filePath)) return [];
   try {
@@ -55,7 +42,6 @@ const readJson = (filePath) => {
   }
 };
 
-// Helper: write JSON file
 const writeJson = (filePath, data) => {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 };
